@@ -16,8 +16,8 @@ class WeatherParser(HTMLParser):
   """
   A class for parsing html
   """
-  def __init__(self, *, convert_charrefs: bool = True) -> None:
-    super().__init__(convert_charrefs=convert_charrefs)
+  def __init__(self):
+    super().__init__()
     self.weather = {}
     self.year = int(datetime.datetime.now().strftime("%Y"))
     self.month = int(datetime.datetime.now().strftime("%m"))
@@ -87,17 +87,17 @@ class WeatherParser(HTMLParser):
       elif self.td and self.d < 3:
         if self.parsable:
           if self.d == 0:
-            if "M" in data or "LegendM" in data:
+            if "M" in data or "LegendM" in data or "\xa0" in data:
               self.maxTemp = "Missing"
             else:
               self.maxTemp = data
           elif self.d == 1:
-            if "M" in data or "LegendM" in data:
+            if "M" in data or "LegendM" in data or "\xa0" in data:
               self.minTemp = "Missing"
             else:
               self.minTemp = data
           elif self.d == 2:
-            if "M" in data or "LegendM" in data:
+            if "M" in data or "LegendM" in data or "\xa0" in data:
               self.meanTemp = "Missing"
             else:
               self.meanTemp = data
