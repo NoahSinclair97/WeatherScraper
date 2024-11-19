@@ -16,35 +16,32 @@ class WeatherParser(HTMLParser):
   """
   A class for parsing html
   """
-  warning = "search by station name"
-  dailyTemps = {}
-  day = 0
-  parsable = False
-  abbr = False
-  tbody = False
-  td = False
-  d = 0
-  maxTemp = 0
-  minTemp = 0
-  meanTemp = 0
-
   def __init__(self, *, convert_charrefs: bool = True) -> None:
     super().__init__(convert_charrefs=convert_charrefs)
     self.weather = {}
     self.year = int(datetime.datetime.now().strftime("%Y"))
     self.month = int(datetime.datetime.now().strftime("%m"))
+    self.parsable = False
+    self.abbr = False
+    self.tbody = False
+    self.td = False
+    self.d = 0
+    self.maxTemp = 0
+    self.minTemp = 0
+    self.meanTemp = 0
+
     while True:
       with urllib.request.urlopen(f'http://climate.weather.gc.ca/climate_data/daily_data_e.html?StationID=27174&timeframe=2&StartYear=1840&EndYear=2018&Day=1&Year={self.year}&Month={self.month}#') as response:
           html = str(response.read())
-      #self.feed(html)
-      t = threading.Thread(target=self.feed,args=(html,))
-      t.start()
+      self.feed(html)
+      #t = threading.Thread(target=self.feed,args=(html,))
+      #t.start()
       self.month = self.month - 1
       if self.month == 0:
         self.year = self.year - 1
         self.month = 12
-      if self.year == 2022:
-        if self.month == 1:
+      if self.year == 2021:
+        if self.month == 12:
           break
 
   def handle_starttag(self, tag, attrs):
@@ -58,21 +55,23 @@ class WeatherParser(HTMLParser):
     if "tbody" in tag:
       self.tbody = True
 
-
   def handle_endtag(self, tag):
     """
     Handles end tag of an element
     """
     if "tr" in tag:
+      if self.parsable:
+        self.set_daily_temp(self.year, self.month, self.day)
       self.d = 0
-      self.last = False
+      self.maxTemp = 0
+      self.minTemp = 0
+      self.meanTemp = 0
     if "td" in tag:
       self.td = False
     if "abbr" in tag:
       self.abbr = False
     if "tbody" in tag:
       self.tbody = False
-
 
   def handle_data(self, data):
     """
@@ -81,28 +80,36 @@ class WeatherParser(HTMLParser):
     if self.tbody:
       if self.abbr:
         if data.isnumeric():
-          print(data)
-          self.day = data
+          self.day = int(data)
           self.parsable = True
         else:
           self.parsable = False
       elif self.td and self.d < 3:
         if self.parsable:
-          print(data)
           if self.d == 0:
-            self.maxTemp = data
+            if "M" in data or "LegendM" in data:
+              self.maxTemp = "Missing"
+            else:
+              self.maxTemp = data
           elif self.d == 1:
-            self.minTemp = data
+            if "M" in data or "LegendM" in data:
+              self.minTemp = "Missing"
+            else:
+              self.minTemp = data
           elif self.d == 2:
-            self.meanTemp = data
+            if "M" in data or "LegendM" in data:
+              self.meanTemp = "Missing"
+            else:
+              self.meanTemp = data
           self.d += 1
 
-    def set_daily_temp(self,year,month,day):
-      date = datetime.date(year,month,day)
-      self.weather[f"{date}"] = {"Max": self.maxTemp, "Min": self.minTemp, "Mean": self.meanTemp}
+  def set_daily_temp(self,year,month,day):
+    #date = datetime.date(year,month,day)
+    self.weather[f"{year}-{month}-{day}"] = {"Max": self.maxTemp, "Min": self.minTemp, "Mean": self.meanTemp}
 
-    def weatherDictionary():
-      return self.weather
+  def weather_dictionary(self):
+    return self.weather
 
 if __name__ == "__main__":
   myparser = WeatherParser()
+  print(myparser.weather_dictionary())
