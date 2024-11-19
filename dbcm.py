@@ -1,8 +1,15 @@
+"""
+ ADEV-3005 (254275) Programming in Python
+ Name: Noah Sinclair
+ Student Number: 0385289
+
+ Database context manager.
+"""
 import sqlite3
 
 class DBCM:
   """
-  A clas for opening a file.
+  A class for a database context manager.
   """
   def __init__(self):
     """

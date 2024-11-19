@@ -12,7 +12,7 @@ import urllib.request
 import datetime
 import threading
 
-class WeatherParser(HTMLParser):
+class WeatherScraper(HTMLParser):
   """
   A class for parsing html
   """
@@ -107,9 +107,5 @@ class WeatherParser(HTMLParser):
     #date = datetime.date(year,month,day)
     self.weather[f"{year}-{month}-{day}"] = {"Max": self.maxTemp, "Min": self.minTemp, "Mean": self.meanTemp}
 
-  def weather_dictionary(self):
+  def get_weather(self):
     return self.weather
-
-if __name__ == "__main__":
-  myparser = WeatherParser()
-  print(myparser.weather_dictionary())
