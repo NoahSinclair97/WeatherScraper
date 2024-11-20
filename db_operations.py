@@ -45,7 +45,7 @@ class DBOperations:
     """
     Saves the weather data to the database
     """
-    weather = sw.WeatherScraper().get_weather()
+    weather = sw.WeatherScraper(12, 2021).get_weather()
     sql = """insert or ignore into weather (sample_date,location,max_temp,min_temp,avg_temp)
             values (?,?,?,?,?)"""
 

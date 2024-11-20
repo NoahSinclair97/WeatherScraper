@@ -6,20 +6,17 @@
 
  Plots weather for a certain period of time.
 """
-import db_operations as db
 import matplotlib.pyplot as plt
 
 class PlotOperations:
   """
   A class for plotting weather data
   """
-  def __init__(self):
+  def __init__(self,db):
       """
       Initializes the data for the weather data
       """
-      self.database = db.DBOperations()
-      self.database.purge_data()
-      self.database.save_data()
+      self.database = db
 
   def box_plot(self, range1, range2):
     """

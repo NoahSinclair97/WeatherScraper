@@ -16,7 +16,7 @@ class WeatherScraper(HTMLParser):
   """
   A class for parsing html
   """
-  def __init__(self):
+  def __init__(self, last_month, last_year):
     super().__init__()
     self.weather = {}
     self.year = int(datetime.datetime.now().strftime("%Y"))
@@ -42,8 +42,8 @@ class WeatherScraper(HTMLParser):
       if self.month == 0:
         self.year = self.year - 1
         self.month = 12
-      if self.year == 2021:
-        if self.month == 12:
+      if self.year == last_year:
+        if self.month == last_month:
           break
 
   def handle_starttag(self, tag, attrs):
