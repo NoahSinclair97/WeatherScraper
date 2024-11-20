@@ -65,6 +65,7 @@ class PlotOperations:
     oct = []
     nov = []
     dec = []
+
     # Iterates over the data and puts it in to its own month
     for i in data:
       if i[0][5:7] == "01":
@@ -92,6 +93,7 @@ class PlotOperations:
       if i[0][5:7] == "12":
         dec.append(i[1])
     finalData = [jan, feb, mar, apr, may, jun, jul, aug, sep, oct, nov, dec]
+
     return finalData
 
 #if __name__ == "__main__":

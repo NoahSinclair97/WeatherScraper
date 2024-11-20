@@ -30,6 +30,7 @@ class WeatherScraper(HTMLParser):
     self.minTemp = 0
     self.meanTemp = 0
 
+    # Scrapes data till a certain date
     while True:
       with urllib.request.urlopen(f'http://climate.weather.gc.ca/climate_data/daily_data_e.html?StationID=27174&timeframe=2&StartYear=1840&EndYear=2018&Day=1&Year={self.year}&Month={self.month}#') as response:
           html = str(response.read())
@@ -105,10 +106,16 @@ class WeatherScraper(HTMLParser):
           self.d += 1
 
   def set_daily_temp(self,year,month,day):
+    """
+    Sets dictionary for the temperature per day
+    """
     date = datetime.date(year,month,day)
     self.weather[f"{date}"] = {"Max": self.maxTemp, "Min": self.minTemp, "Mean": self.meanTemp}
 
   def get_weather(self):
+    """
+    Returns a dictionary of dictionaries of weather data
+    """
     return self.weather
 
 #if __name__ == "__main__":
