@@ -45,7 +45,7 @@ class DBOperations:
     """
     Saves the weather data to the database
     """
-    weather = sw.WeatherScraper(12, 2021).get_weather()
+    weather = sw.WeatherScraper(12, 2023).get_weather()
     sql = """insert or ignore into weather (sample_date,location,max_temp,min_temp,avg_temp)
             values (?,?,?,?,?)"""
 
@@ -55,7 +55,7 @@ class DBOperations:
         data = (f'{k}','Winnipeg, MB',float(f'{v["Max"]}'),float(f'{v["Min"]}'),float(f'{v["Mean"]}'))
         self.cursor.execute(sql, data)
       except:
-        pass # Cathces missing data and passes over it
+        pass # Catches missing data and passes over it
     self.conn.commit()
 
   def initialize_db(self):
@@ -80,28 +80,32 @@ class DBOperations:
 
   def update_data(self):
     """
-    Updates the weather data to the database
+    Updates the weather data in the database
     """
     date = ""
 
-    for row in self.cursor.execute(f"select max(sample_date) from weather"):
-      data = row
+    for row in self.cursor.execute("select sample_date from weather order by date(sample_date) desc limit 1;"):
+      date = row
 
-    weather = sw.WeatherScraper(date[5:7], date[0:4]).get_weather()
-    sql = """insert or ignore into weather (sample_date,location,max_temp,min_temp,avg_temp)
-            values (?,?,?,?,?)"""
+    try:
+      weather = sw.WeatherScraper(int(date[0][5:7]), int(date[0][0:4])).get_weather()
+      sql = """insert or ignore into weather (sample_date,location,max_temp,min_temp,avg_temp)
+              values (?,?,?,?,?)"""
 
-    # Iterates through the dictionaries and inserts a new row to the table.
-    for k,v in weather.items():
-      try:
-        data = (f'{k}','Winnipeg, MB',float(f'{v["Max"]}'),float(f'{v["Min"]}'),float(f'{v["Mean"]}'))
-        self.cursor.execute(sql, data)
-      except:
-        pass # Cathces missing data and passes over it
-    self.conn.commit()
+      # Iterates through the dictionaries and inserts a new row to the table.
+      for k,v in weather.items():
+        try:
+          data = (f'{k}','Winnipeg, MB',float(f'{v["Max"]}'),float(f'{v["Min"]}'),float(f'{v["Mean"]}'))
+          self.cursor.execute(sql, data)
+        except:
+          pass # Catches missing data and passes over it
+      self.conn.commit()
+    except:
+      print("Error updating dataset")
 
 #if __name__ == "__main__":
   #c = DBOperations()
   #c.purge_data()
   #c.save_data()
+  #c.update_data()
   #print(c.fetch_data("2022-06-01"))
