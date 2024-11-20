@@ -33,9 +33,10 @@ class WeatherScraper(HTMLParser):
     while True:
       with urllib.request.urlopen(f'http://climate.weather.gc.ca/climate_data/daily_data_e.html?StationID=27174&timeframe=2&StartYear=1840&EndYear=2018&Day=1&Year={self.year}&Month={self.month}#') as response:
           html = str(response.read())
-      self.feed(html)
-      #t = threading.Thread(target=self.feed,args=(html,))
-      #t.start()
+      #self.feed(html)
+      t = threading.Thread(target=self.feed,args=(html,))
+      t.start()
+      t.join()
       self.month = self.month - 1
       if self.month == 0:
         self.year = self.year - 1
@@ -109,3 +110,7 @@ class WeatherScraper(HTMLParser):
 
   def get_weather(self):
     return self.weather
+
+#if __name__ == "__main__":
+#  test = WeatherScraper()
+#  print(test.get_weather())

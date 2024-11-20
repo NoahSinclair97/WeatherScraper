@@ -19,14 +19,14 @@ class DBOperations:
   def fetch_data(self,range1,range2 = None):
     data = []
     if range2 != None:
-      for row in self.cursor.execute(f"select * from weather where sample_date between date('{range1}') and date('{range2}')"):
+      for row in self.cursor.execute(f"select sample_date, max_temp, min_temp, avg_temp from weather where sample_date between date('{range1}') and date('{range2}')"):
         data.append(row)
     else:
       month = range1[5:7]
       year = range1[0:4]
       last_day = calendar.monthrange(int(year),int(month))[1]
       end_date = f"{year}-{month}-{last_day}"
-      for row in self.cursor.execute(f"select * from weather where sample_date between date('{range1}') and date('{end_date}')"):
+      for row in self.cursor.execute(f"select sample_date, avg_temp from weather where sample_date between date('{range1}') and date('{end_date}')"):
         data.append(row)
     return data
 
@@ -42,6 +42,7 @@ class DBOperations:
         self.cursor.execute(sql, data)
       except:
         pass
+    self.conn.commit()
 
   def initialize_db(self):
     self.cursor.execute("""create table if not exists weather
@@ -55,9 +56,10 @@ class DBOperations:
 
   def purge_data(self):
     self.cursor.execute("""delete from weather""")
+    self.conn.commit()
 
-if __name__ == "__main__":
-  c = DBOperations()
+#if __name__ == "__main__":
+  #c = DBOperations()
   #c.purge_data()
   #c.save_data()
   #print(c.fetch_data("2022-06-01"))
