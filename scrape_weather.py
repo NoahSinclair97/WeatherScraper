@@ -104,8 +104,8 @@ class WeatherScraper(HTMLParser):
           self.d += 1
 
   def set_daily_temp(self,year,month,day):
-    #date = datetime.date(year,month,day)
-    self.weather[f"{year}-{month}-{day}"] = {"Max": self.maxTemp, "Min": self.minTemp, "Mean": self.meanTemp}
+    date = datetime.date(year,month,day)
+    self.weather[f"{date}"] = {"Max": self.maxTemp, "Min": self.minTemp, "Mean": self.meanTemp}
 
   def get_weather(self):
     return self.weather
