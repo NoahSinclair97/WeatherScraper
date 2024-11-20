@@ -78,6 +78,28 @@ class DBOperations:
     self.cursor.execute("""delete from weather""")
     self.conn.commit()
 
+  def update_data(self):
+    """
+    Updates the weather data to the database
+    """
+    date = ""
+
+    for row in self.cursor.execute(f"select max(sample_date) from weather"):
+      data = row
+
+    weather = sw.WeatherScraper(date[5:7], date[0:4]).get_weather()
+    sql = """insert or ignore into weather (sample_date,location,max_temp,min_temp,avg_temp)
+            values (?,?,?,?,?)"""
+
+    # Iterates through the dictionaries and inserts a new row to the table.
+    for k,v in weather.items():
+      try:
+        data = (f'{k}','Winnipeg, MB',float(f'{v["Max"]}'),float(f'{v["Min"]}'),float(f'{v["Mean"]}'))
+        self.cursor.execute(sql, data)
+      except:
+        pass # Cathces missing data and passes over it
+    self.conn.commit()
+
 #if __name__ == "__main__":
   #c = DBOperations()
   #c.purge_data()

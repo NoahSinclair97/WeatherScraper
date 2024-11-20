@@ -15,6 +15,9 @@ class WeatherProcessor:
   A class for processing the weather data through a menu
   """
   def __init__(self):
+    """
+    Initializes menu
+    """
     self.database = db.DBOperations()
     self.plot = po.PlotOperations(self.database)
 
@@ -34,7 +37,7 @@ class WeatherProcessor:
 
     # Sets the main menu options
     self.main_menu_options = [
-      ("Update dataset", self.update_data),
+      ("Update dataset", self.database.update_data),
       ("Create a Boxplot", self.create_boxplot),
       ("Create a Lineplot", self.create_lineplot),
       ("Settings", self.settings_menu.open),
@@ -47,28 +50,36 @@ class WeatherProcessor:
         prompt=">",
         options=self.main_menu_options)
 
-  def update_data(self):
-    self.database.save_data()
-
   def run(self):
+    """
+    Runs the menu
+    """
     self.main_menu.open()
 
   def create_boxplot(self):
+    """
+    Creates a boxplot for thee weather data
+    """
     try:
       start_year = input("Please enter a start year format (YYYY): ")
       end_year = input("Please enter an end year format (YYYY): ")
       start_date = f"{start_year}-01-01"
       end_date = f"{end_year}-01-01"
       self.plot.box_plot(start_date,end_date)
+      self.main_menu.message = "Please choose an option."
     except:
       self.main_menu.message = "Incorrect format input!"
 
   def create_lineplot(self):
+    """
+    Creates a lineplot for thee weather data
+    """
     try:
       year = input("Please enter a year format (YYYY): ")
       month = input("Please enter a month format (MM): ")
       date = f"{year}-{month}-01"
       self.plot.line_plot(date)
+      self.main_menu.message = "Please choose an option."
     except:
       self.main_menu.message = "Incorrect format input!"
 

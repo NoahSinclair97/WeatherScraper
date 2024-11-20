@@ -22,6 +22,7 @@ class WeatherScraper(HTMLParser):
     self.year = int(datetime.datetime.now().strftime("%Y"))
     self.month = int(datetime.datetime.now().strftime("%m"))
     self.parsable = False
+    self.error = False
     self.abbr = False
     self.tbody = False
     self.td = False
@@ -31,7 +32,7 @@ class WeatherScraper(HTMLParser):
     self.meanTemp = 0
 
     # Scrapes data till a certain date
-    while True:
+    while True and not self.error:
       with urllib.request.urlopen(f'http://climate.weather.gc.ca/climate_data/daily_data_e.html?StationID=27174&timeframe=2&StartYear=1840&EndYear=2018&Day=1&Year={self.year}&Month={self.month}#') as response:
           html = str(response.read())
       #self.feed(html)
@@ -79,6 +80,10 @@ class WeatherScraper(HTMLParser):
     """
     Handles data of an element
     """
+    # Checks if it reaches an unreadable date
+    if "search by station" in data.lower():
+      self.error = True
+
     if self.tbody:
       if self.abbr:
         if data.isnumeric():
