@@ -612,9 +612,6 @@
   ('db_operations',
    'C:\\Users\\noahs\\OneDrive\\Documents\\RRC\\Term5\\ADEV-3005\\FinalProject\\db_operations.py',
    'PYMODULE'),
-  ('dbcm',
-   'C:\\Users\\noahs\\OneDrive\\Documents\\RRC\\Term5\\ADEV-3005\\FinalProject\\dbcm.py',
-   'PYMODULE'),
   ('decimal',
    'C:\\Program '
    'Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.11_3.11.2544.0_x64__qbz5n2kfra8p0\\Lib\\decimal.py',

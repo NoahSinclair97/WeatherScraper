@@ -45,7 +45,7 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 
 [Files]
 Source: "C:\Users\noahs\OneDrive\Documents\RRC\Term5\ADEV-3005\FinalProject\dist\weather_processor\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\noahs\OneDrive\Documents\RRC\Term5\ADEV-3005\FinalProject\dist\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "C:\Users\noahs\OneDrive\Documents\RRC\Term5\ADEV-3005\FinalProject\dist\weather_processor\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]
